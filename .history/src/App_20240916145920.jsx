@@ -2,14 +2,10 @@
 import { Fragment } from "react";
 function App() {
   return (
-    <>        
-    
-    <h1 className="myHeading">{`R Kelly Greatest Hits`}</h1>
-
-      <div className="content">
+    <div>
+      <h1 className="myHeading">{`R Kelly Greatest Hits`}</h1>
         <div className="row">
-          <img
-            className="image"
+          <img className="image"
             src="https://upload.wikimedia.org/wikipedia/commons/2/26/R._Kelly_2002_Mugshot.jpg"
             alt=""
           />
@@ -64,8 +60,7 @@ function App() {
             </details>
           </div>
         </div>
-      </div>
-    </>
+    <div/>
   );
 }
 

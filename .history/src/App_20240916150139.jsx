@@ -2,9 +2,7 @@
 import { Fragment } from "react";
 function App() {
   return (
-    <>        
-    
-    <h1 className="myHeading">{`R Kelly Greatest Hits`}</h1>
+    <>        <h1 className="myHeading">{`R Kelly Greatest Hits`}</h1>
 
       <div className="content">
         <div className="row">
