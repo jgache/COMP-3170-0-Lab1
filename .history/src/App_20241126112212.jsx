@@ -5,7 +5,7 @@ function App() {
   const [countries, setCountries] = useState([]);
   const [filteredCountries, setFilteredCountries] = useState([]);
   const [filter, setFilter] = useState({ continent: "", subregion: "" });
-  const [sortOption, setSortOption] = useState(null);
+  const [sortOption, setSortOption] = useState(null); // No sorting by default
   const [top10, setTop10] = useState(false);
   const [sortByPopulation, setSortByPopulation] = useState(false);
   const [sortByArea, setSortByArea] = useState(false);
@@ -23,18 +23,21 @@ function App() {
   useEffect(() => {
     let result = [...countries];
 
+    // Apply continent filter
     if (filter.continent) {
       result = result.filter((country) =>
         country.continents?.includes(filter.continent)
       );
     }
 
+    // Apply subregion filter
     if (filter.subregion) {
       result = result.filter(
         (country) => country.subregion === filter.subregion
       );
     }
 
+    // Apply sorting options
     if (sortOption === "alphabetical") {
       result.sort((a, b) => a.name.common.localeCompare(b.name.common));
     } else if (sortOption === "population" && top10) {
@@ -54,7 +57,7 @@ function App() {
   };
 
   const handleSortToggle = (type) => {
-    
+    // Toggle off if the same option is clicked again
     if (sortOption === type) {
       setSortOption(null);
       setTop10(false);
@@ -63,6 +66,7 @@ function App() {
       return;
     }
 
+    // Enable the selected sorting option
     if (type === "alphabetical") {
       setSortOption("alphabetical");
       setTop10(false);

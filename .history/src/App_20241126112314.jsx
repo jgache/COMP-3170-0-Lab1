@@ -54,7 +54,6 @@ function App() {
   };
 
   const handleSortToggle = (type) => {
-    
     if (sortOption === type) {
       setSortOption(null);
       setTop10(false);

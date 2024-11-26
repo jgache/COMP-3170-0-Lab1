@@ -5,7 +5,7 @@ function App() {
   const [countries, setCountries] = useState([]);
   const [filteredCountries, setFilteredCountries] = useState([]);
   const [filter, setFilter] = useState({ continent: "", subregion: "" });
-  const [sortOption, setSortOption] = useState(null);
+  const [sortOption, setSortOption] = useState(null); // No sorting by default
   const [top10, setTop10] = useState(false);
   const [sortByPopulation, setSortByPopulation] = useState(false);
   const [sortByArea, setSortByArea] = useState(false);
@@ -23,18 +23,21 @@ function App() {
   useEffect(() => {
     let result = [...countries];
 
+    // Apply continent filter
     if (filter.continent) {
       result = result.filter((country) =>
         country.continents?.includes(filter.continent)
       );
     }
 
+    // Apply subregion filter
     if (filter.subregion) {
       result = result.filter(
         (country) => country.subregion === filter.subregion
       );
     }
 
+    // Apply sorting options
     if (sortOption === "alphabetical") {
       result.sort((a, b) => a.name.common.localeCompare(b.name.common));
     } else if (sortOption === "population" && top10) {
@@ -54,7 +57,6 @@ function App() {
   };
 
   const handleSortToggle = (type) => {
-    
     if (sortOption === type) {
       setSortOption(null);
       setTop10(false);
@@ -81,18 +83,71 @@ function App() {
     }
   };
 
+  const containerStyle = {
+    maxWidth: "1200px",
+    margin: "0 auto",
+    fontFamily: "Arial, sans-serif",
+    padding: "20px",
+    color: "#333",
+  };
+
+  const headerStyle = {
+    textAlign: "center",
+    marginBottom: "20px",
+    color: "#007bff",
+  };
+
+  const filtersContainerStyle = {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: "15px",
+    flexWrap: "wrap",
+    padding: "10px 0",
+    borderBottom: "1px solid #ddd",
+    marginBottom: "20px",
+  };
+
+  const filterGroupStyle = {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+  };
+
+  const labelStyle = {
+    fontSize: "14px",
+    color: "#555",
+  };
+
+  const selectStyle = {
+    padding: "5px",
+    borderRadius: "4px",
+    border: "1px solid #ccc",
+    fontSize: "14px",
+  };
+
+  const checkboxStyle = {
+    transform: "scale(1.2)",
+    marginRight: "5px",
+  };
+
+  const filtersHeaderStyle = {
+    fontWeight: "bold",
+    fontSize: "16px",
+    marginRight: "10px",
+    color: "#555",
+  };
+
   return (
-    <div>
-      <h2>Countries of the World</h2>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "20px", marginBottom: "20px" }}>
+    <div style={containerStyle}>
+      <h1 style={headerStyle}>Countries of the World</h1>
+      <div style={filtersContainerStyle}>
         {/* Continent Filter */}
-        <label>
-          <strong>Continent:</strong>
+        <div style={filterGroupStyle}>
+          <span style={filtersHeaderStyle}>Continent:</span>
           <select
-            onChange={(e) =>
-              handleFilterChange("continent", e.target.value)
-            }
-            style={{ marginLeft: "5px" }}
+            onChange={(e) => handleFilterChange("continent", e.target.value)}
+            style={selectStyle}
           >
             <option value="">All</option>
             <option value="Africa">Africa</option>
@@ -101,58 +156,57 @@ function App() {
             <option value="Oceania">Oceania</option>
             <option value="Americas">Americas</option>
           </select>
-        </label>
+        </div>
 
         {/* Subregion Filter */}
-        <label>
-          <strong>Subregion:</strong>
+        <div style={filterGroupStyle}>
+          <span style={filtersHeaderStyle}>Subregion:</span>
           <select
-            onChange={(e) =>
-              handleFilterChange("subregion", e.target.value)
-            }
-            style={{ marginLeft: "5px" }}
+            onChange={(e) => handleFilterChange("subregion", e.target.value)}
+            style={selectStyle}
           >
             <option value="">All</option>
             <option value="Northern Europe">Northern Europe</option>
             <option value="Eastern Africa">Eastern Africa</option>
           </select>
-        </label>
+        </div>
 
         {/* Top 10 Toggles */}
-        <label>
-          <strong>Top 10 by:</strong>
-          <div style={{ display: "inline-block", marginLeft: "5px" }}>
-            <label style={{ marginRight: "10px" }}>
-              <input
-                type="checkbox"
-                checked={sortOption === "population"}
-                onChange={() => handleSortToggle("population")}
-              />
-              Population
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                checked={sortOption === "area"}
-                onChange={() => handleSortToggle("area")}
-              />
-              Area
-            </label>
-          </div>
-        </label>
+        <div style={filterGroupStyle}>
+          <span style={filtersHeaderStyle}>Top 10 by:</span>
+          <label style={labelStyle}>
+            <input
+              type="checkbox"
+              checked={sortOption === "population"}
+              onChange={() => handleSortToggle("population")}
+              style={checkboxStyle}
+            />
+            Population
+          </label>
+          <label style={labelStyle}>
+            <input
+              type="checkbox"
+              checked={sortOption === "area"}
+              onChange={() => handleSortToggle("area")}
+              style={checkboxStyle}
+            />
+            Area
+          </label>
+        </div>
 
         {/* Alphabetical Toggle */}
-        <label>
-          <strong>Sort:</strong>
-          <label style={{ marginLeft: "5px" }}>
+        <div style={filterGroupStyle}>
+          <span style={filtersHeaderStyle}>Sort:</span>
+          <label style={labelStyle}>
             <input
               type="checkbox"
               checked={sortOption === "alphabetical"}
               onChange={() => handleSortToggle("alphabetical")}
+              style={checkboxStyle}
             />
             Alphabetical
           </label>
-        </label>
+        </div>
       </div>
       <Countries countries={filteredCountries} />
     </div>

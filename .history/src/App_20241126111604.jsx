@@ -5,7 +5,7 @@ function App() {
   const [countries, setCountries] = useState([]);
   const [filteredCountries, setFilteredCountries] = useState([]);
   const [filter, setFilter] = useState({ continent: "", subregion: "" });
-  const [sortOption, setSortOption] = useState(null);
+  const [sortOption, setSortOption] = useState(null); // Default is no sorting
   const [top10, setTop10] = useState(false);
   const [sortByPopulation, setSortByPopulation] = useState(false);
   const [sortByArea, setSortByArea] = useState(false);
@@ -23,28 +23,36 @@ function App() {
   useEffect(() => {
     let result = [...countries];
 
+    // Filter by continent
     if (filter.continent) {
       result = result.filter((country) =>
         country.continents?.includes(filter.continent)
       );
     }
 
+    // Filter by subregion
     if (filter.subregion) {
       result = result.filter(
         (country) => country.subregion === filter.subregion
       );
     }
 
+    // Apply sorting if selected
     if (sortOption === "alphabetical") {
       result.sort((a, b) => a.name.common.localeCompare(b.name.common));
-    } else if (sortOption === "population" && top10) {
-      result = result.sort((a, b) => b.population - a.population).slice(0, 10);
-    } else if (sortOption === "area" && top10) {
-      result = result.sort((a, b) => b.area - a.area).slice(0, 10);
+    }
+
+    // Apply Top 10 sorting
+    if (top10) {
+      if (sortByPopulation) {
+        result = result.sort((a, b) => b.population - a.population).slice(0, 10);
+      } else if (sortByArea) {
+        result = result.sort((a, b) => b.area - a.area).slice(0, 10);
+      }
     }
 
     setFilteredCountries(result);
-  }, [countries, filter, sortOption, top10]);
+  }, [countries, filter, sortOption, top10, sortByPopulation, sortByArea]);
 
   const handleFilterChange = (type, value) => {
     setFilter((prev) => ({
@@ -54,27 +62,14 @@ function App() {
   };
 
   const handleSortToggle = (type) => {
-    
-    if (sortOption === type) {
-      setSortOption(null);
-      setTop10(false);
-      setSortByPopulation(false);
-      setSortByArea(false);
-      return;
-    }
-
+    setTop10(false); // Reset top 10 when toggling
     if (type === "alphabetical") {
-      setSortOption("alphabetical");
-      setTop10(false);
-      setSortByPopulation(false);
-      setSortByArea(false);
+      setSortOption(sortOption === "alphabetical" ? null : "alphabetical");
     } else if (type === "population") {
-      setSortOption("population");
       setTop10(true);
       setSortByPopulation(true);
       setSortByArea(false);
     } else if (type === "area") {
-      setSortOption("area");
       setTop10(true);
       setSortByPopulation(false);
       setSortByArea(true);
@@ -125,7 +120,7 @@ function App() {
             <label style={{ marginRight: "10px" }}>
               <input
                 type="checkbox"
-                checked={sortOption === "population"}
+                checked={sortByPopulation}
                 onChange={() => handleSortToggle("population")}
               />
               Population
@@ -133,7 +128,7 @@ function App() {
             <label>
               <input
                 type="checkbox"
-                checked={sortOption === "area"}
+                checked={sortByArea}
                 onChange={() => handleSortToggle("area")}
               />
               Area
